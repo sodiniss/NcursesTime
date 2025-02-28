@@ -1,5 +1,6 @@
 #include "Countdown.h"
 #include <string>
+#include <unistd.h>
 
 Countdown::Countdown() {
     seconds = 0;
@@ -12,6 +13,7 @@ void Countdown::addTime(int sec) {
             seconds += sec;
         } else {
             seconds = 0;
+            running = false;
         }
         
     }
@@ -23,9 +25,32 @@ void Countdown::start() {
     }
 }
 
+void Countdown::pause() {
+    if (running) {
+        running = false;
+    }
+}
+
+void Countdown::reset() {
+    running = false;
+    seconds = 0;
+}
+
 bool Countdown::isRunning() {
     return running;
 }
+
+void Countdown::refreshTime() {
+    if (running && seconds > 0) {
+        sleep(1);
+        seconds--;
+        if (seconds == 0) {
+            running = false;
+            // cout che timer completato
+        }
+    }
+}
+
 
 std::string Countdown::secondsToString() {
     int h = seconds / 3600;

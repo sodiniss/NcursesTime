@@ -1,7 +1,7 @@
 #include "UI.h"
 #include "DateTime.h"
 #include <ncurses.h>
-#include <unistd.h>
+
 
 UI::UI() {
     initscr();
@@ -9,7 +9,7 @@ UI::UI() {
     curs_set(0);
     nodelay(stdscr, TRUE);
     clockFormat = getFormatEU();  //default
-    countdown.addTime(5 );
+    countdown.addTime(5 );  //testing
 }
 
 void UI::run() {
@@ -20,11 +20,11 @@ void UI::run() {
         mvprintw(2, 1, "Timer  %s", countdown.secondsToString().c_str());
         refresh();
 
-        countdown.secondsToString();
         handleInput();
+        countdown.refreshTime();
         //countdown.AGGGIORNA TIMER QUALCOSA();
-        //napms(50);
-        usleep(100000);
+        napms(50);
+        //usleep(50000);
     }
 }
 
@@ -39,7 +39,10 @@ void UI::handleInput() {
         case '5': countdown.addTime(-60); break;
         case '7': countdown.addTime(3600); break;
         case '4': countdown.addTime(-3600); break;
-        case 's': countdown.start(); break;
+        case 's': countdown.isRunning() ? countdown.pause() : countdown.start(); break;
+        case 'r': countdown.reset(); break;
+    
+
         case '1': clockFormat = getFormatEU(); break;
         case '2': clockFormat = getFormatISO(); break;
         case '3': clockFormat = getFormatUSA(); break;

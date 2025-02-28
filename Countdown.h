@@ -11,7 +11,10 @@ public:
     Countdown();
     void addTime(int sec);
     void start();
+    void pause();
+    void reset();
     bool isRunning();
+    void refreshTime();
     std::string secondsToString();
 };
 
