@@ -40,6 +40,10 @@ bool Countdown::isRunning() {
     return running;
 }
 
+int Countdown::getSeconds() {
+    return seconds;
+}
+
 void Countdown::refreshTime() {
     if (running && seconds > 0) {
         sleep(1);

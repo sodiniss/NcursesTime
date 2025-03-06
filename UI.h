@@ -10,7 +10,8 @@ class UI {
 private:
     const char* clockFormat; // da riguardare
     Countdown countdown;
-    // WINDOW *window;  //da riguardare
+    WINDOW *mainWindow;  //da riguardare
+    WINDOW *menuWindow;
 public:
     UI();
     void run();

@@ -5,7 +5,7 @@ std::string formatDate(const char* format) {
     time_t timestamp = time(nullptr);
     struct tm datetime = *localtime(&timestamp);
     char buffer[30];
-    strftime(buffer, sizeof(buffer), format, &datetime); //da cambiare se vuoi usare WINDOW
+    strftime(buffer, sizeof(buffer), format, &datetime); //da cambiare se vuoi usare WINDOW??
     return std::string(buffer);
 }
 

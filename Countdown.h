@@ -14,6 +14,8 @@ public:
     void pause();
     void reset();
     bool isRunning();
+    int getSeconds();
+
     void refreshTime();
     std::string secondsToString();
 };
