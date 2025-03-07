@@ -7,7 +7,7 @@ UI::UI() {
     initscr();
     noecho();
     curs_set(0);
-    nodelay(stdscr, TRUE);
+
 
     start_color();
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
@@ -15,7 +15,7 @@ UI::UI() {
     init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(4, COLOR_GREEN, COLOR_BLACK);
     init_pair(5, COLOR_RED, COLOR_BLACK);
-    //bkgd(COLOR_PAIR(1)); 
+    bkgd(COLOR_PAIR(1)); 
 
     int mainWindowHeight = 5;
     int mainWindowWidth = 50;
@@ -25,6 +25,8 @@ UI::UI() {
 
     mainWindow = newwin(mainWindowHeight, mainWindowWidth, mainWindowStartY, mainWindowStartX);
     box(mainWindow, ACS_VLINE, ACS_HLINE);
+
+    nodelay(mainWindow, TRUE);
 
     // int menuWindowHeight = 10;
     // int menuWindowWidth = 60;
@@ -113,7 +115,7 @@ void UI::run() {
 
 
 void UI::handleInput() {
-    int keypress = getch();
+    int keypress = wgetch(mainWindow);
     switch (keypress) {
         case '9': countdown.addTime(1); break;
         case '6': countdown.addTime(-1); break;
