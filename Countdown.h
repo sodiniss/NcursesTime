@@ -6,6 +6,7 @@ class Countdown {
 private:
     int seconds;
     bool running;
+    bool complete;
 
 public:
     Countdown();
@@ -14,6 +15,7 @@ public:
     void pause();
     void reset();
     bool isRunning();
+    bool isComplete();
     int getSeconds();
 
     void refreshTime();

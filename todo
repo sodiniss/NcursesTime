@@ -1,0 +1,6 @@
+longpress da limitare
+valuta enum
+segnala timer completato
+riguardare la sleep del countdown - perchè rallenta input - es: cambia formato durante countdown
+(variabili non resettano a re run)
+gtests

@@ -5,15 +5,16 @@
 Countdown::Countdown() {
     seconds = 0;
     running = false;
+    complete = false;
 }
 
 void Countdown::addTime(int sec) {
     if(!running) {
         if(seconds + sec > 0){
             seconds += sec;
+            complete = false;
         } else {
-            seconds = 0;
-            running = false;
+            reset();
         }
         
     }
@@ -21,6 +22,7 @@ void Countdown::addTime(int sec) {
 
 void Countdown::start() {
     if (seconds > 0) {
+        complete = false;
         running = true;
     }
 }
@@ -34,10 +36,15 @@ void Countdown::pause() {
 void Countdown::reset() {
     running = false;
     seconds = 0;
+    complete = false;
 }
 
 bool Countdown::isRunning() {
     return running;
+}
+
+bool Countdown::isComplete() {
+    return complete;
 }
 
 int Countdown::getSeconds() {
@@ -50,6 +57,7 @@ void Countdown::refreshTime() {
         seconds--;
         if (seconds == 0) {
             running = false;
+            complete = true;
             // cout che timer completato
         }
     }

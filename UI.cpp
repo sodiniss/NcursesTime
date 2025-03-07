@@ -4,111 +4,128 @@
 
 
 UI::UI() {
+    //definizione ncurses
     initscr();
     noecho();
     curs_set(0);
+    cbreak();       
 
-
+    //definizione dei colori
     start_color();
+    init_color(COLOR_BLACK, 100, 0, 0);
+
+
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     init_pair(2, COLOR_BLUE, COLOR_BLACK);
     init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(4, COLOR_GREEN, COLOR_BLACK);
     init_pair(5, COLOR_RED, COLOR_BLACK);
-    bkgd(COLOR_PAIR(1)); 
+    init_pair(6, COLOR_WHITE, COLOR_BLUE);
+    init_pair(7, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(8, COLOR_CYAN, COLOR_BLACK);
 
-    int mainWindowHeight = 5;
+    //creazione della finestra
+    int mainWindowHeight = 8;
     int mainWindowWidth = 50;
-
     int mainWindowStartY= (getmaxy(stdscr) - mainWindowHeight)/2;
     int mainWindowStartX= (getmaxx(stdscr) - mainWindowWidth)/2;
 
     mainWindow = newwin(mainWindowHeight, mainWindowWidth, mainWindowStartY, mainWindowStartX);
-    box(mainWindow, ACS_VLINE, ACS_HLINE);
-
+    
+    box(mainWindow, '8', '8');
+    bkgd(COLOR_PAIR(6)); 
+    wbkgd(mainWindow, COLOR_PAIR(1));
     nodelay(mainWindow, TRUE);
+    wrefresh(mainWindow);
 
-    // int menuWindowHeight = 10;
-    // int menuWindowWidth = 60;
-    // int menuWindowStartY = 50;
-    // int menuWindowStartX = 0;
-
-    // menuWindow = newwin(menuWindowHeight, menuWindowWidth, menuWindowStartY, menuWindowStartX);
-    // box(menuWindow, 0, 0);
+    //formato data predefinito
+    clockFormat = getFormatEU();
 
 
-    clockFormat = getFormatEU();  //default
-    countdown.addTime(5 );  //testing
 }
+
+UI::~UI() {
+    if (mainWindow) {
+        delwin(mainWindow);
+    }
+    endwin();
+}
+
 
 void UI::run() {
     while (true) {
 
-        wclear(mainWindow);//clear();
+        wclear(mainWindow);
 
-        wattron(mainWindow, COLOR_PAIR(2)); 
-        wattron(mainWindow, A_BOLD);
-        mvwprintw(mainWindow, 0, 0, "Data & Ora");
-        wattroff(mainWindow, COLOR_PAIR(2)); 
-        wattron(mainWindow, COLOR_PAIR(3)); 
-        mvwprintw(mainWindow, 1, 0, "Timer");
-        wattroff(mainWindow, COLOR_PAIR(3)); 
-        wattroff(mainWindow, A_BOLD);
-        mvwprintw(mainWindow, 0, 15, "%s", formatDate(clockFormat).c_str());
-        mvwprintw(mainWindow, 1, 15, "%s", countdown.secondsToString().c_str());
-
-        //anche qui con enum sarebbe più comodo
-        if (clockFormat == getFormatEU()) {
-            wattron(mainWindow, COLOR_PAIR(2) | A_BOLD);
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 0, "(1)EU");
-            wattroff(mainWindow, COLOR_PAIR(2) | A_BOLD);
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 10, "(2)ISO");
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 20, "(3)USA");
-        } else if (clockFormat == getFormatISO()) {
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 0, "(1)EU");
-            wattron(mainWindow, COLOR_PAIR(2) | A_BOLD);
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 10, "(2)ISO");
-            wattroff(mainWindow, COLOR_PAIR(2) | A_BOLD);
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 20, "(3)USA");
-        } else if (clockFormat == getFormatUSA()) {
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 0, "(1)EU");
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 10, "(2)ISO");
-            wattron(mainWindow, COLOR_PAIR(2) | A_BOLD);
-            mvwprintw(mainWindow, getmaxy(mainWindow)-2, 20, "(3)USA");
-            wattroff(mainWindow, COLOR_PAIR(2) | A_BOLD);
+        // divisore
+        for(int i=0; i<getmaxx(mainWindow); i++) {
+            textPrint(mainWindow, 0, i, "#", 8, A_BOLD);
+            textPrint(mainWindow, getmaxy(mainWindow)-1, i, "#", 8, A_BOLD);
         }
+        for(int i=1; i<getmaxy(mainWindow)-1; i++) {
+            textPrint(mainWindow, i, 0, "|", 8, A_BOLD);
+            textPrint(mainWindow, i, getmaxx(mainWindow)-1, "|", 8, A_BOLD);
+        }
+
+
+        int rigaData = 1;
+        int rigaTimer = 5;
+        int primaColonna = 2;
+        int secondaColonna = primaColonna + 15;
+
+        //sezione Data e Ora
+        textPrint(mainWindow, rigaData, primaColonna, "Data & Ora", 2, A_BOLD);
+        textPrint(mainWindow, rigaData+1, primaColonna, "Formato", 2, A_ITALIC);
+        textPrint(mainWindow, rigaData, secondaColonna, formatDate(clockFormat).c_str());
+
+        textPrint(mainWindow, rigaData+1, secondaColonna, "(1)EU" );
+        textPrint(mainWindow, rigaData+1, secondaColonna+10, "(2)ISO" );
+        textPrint(mainWindow, rigaData+1, secondaColonna+20, "(3)USA" );
+
+        if (clockFormat == getFormatEU()) {
+            textPrint(mainWindow, rigaData+1, secondaColonna, "(1)EU", 2, A_BOLD );
+        }
+        if (clockFormat == getFormatISO()) {
+            textPrint(mainWindow, rigaData+1, secondaColonna+10, "(2)ISO", 2, A_BOLD );
+        }
+        if (clockFormat == getFormatUSA()) {
+            textPrint(mainWindow, rigaData+1, secondaColonna+20, "(3)USA", 2, A_BOLD );
+        }
+
+
+        //sezione Timer
+        textPrint(mainWindow, rigaTimer, primaColonna, "Timer", 3, A_BOLD);
+        textPrint(mainWindow, rigaTimer+1, primaColonna, "Azioni", 3, A_ITALIC);
+        textPrint(mainWindow, rigaTimer, secondaColonna, countdown.secondsToString().c_str());
+
 
         //questa se usassi 3 stati mutualm esclusivi "running" "paused" "completed" funzionerebbe meglio?? avrei comunque bisogno di sapere secondi
         //devo comunque avere tre stati: running-->"stop"; !running&&seconds>0-->"start"; !running&&seconds=0-->"empty timer"
         if (countdown.isRunning()) {
-            wattron(mainWindow, COLOR_PAIR(5));
-            wattron(mainWindow, A_BOLD); 
-            mvwprintw(mainWindow, getmaxy(mainWindow)-1, 0, "(S)top");
-            wattroff(mainWindow, COLOR_PAIR(5)); 
-            mvwprintw(mainWindow, getmaxy(mainWindow)-1, 10, "(R)eset");
-            wattron(mainWindow, A_BOLD);
+            textPrint(mainWindow, rigaTimer+1, secondaColonna, "(S)top", 5, A_BOLD);
+            textPrint(mainWindow, rigaTimer+1, secondaColonna+10, "(R)eset");
         } else {
             if (countdown.getSeconds() > 0) {
-                wattron(mainWindow, COLOR_PAIR(4)); 
-                wattron(mainWindow, A_BOLD);
-                mvwprintw(mainWindow, getmaxy(mainWindow)-1, 0, "(S)tart");
-                wattroff(mainWindow, COLOR_PAIR(4));
-                mvwprintw(mainWindow, getmaxy(mainWindow)-1, 10, "(R)eset");
-                wattron(mainWindow, A_BOLD);
+                textPrint(mainWindow, rigaTimer+1, secondaColonna, "(S)tart", 4, A_BOLD);
+                textPrint(mainWindow, rigaTimer+1, secondaColonna+10, "(R)eset");
             }
             else {
-                mvwprintw(mainWindow, getmaxy(mainWindow)-1, 0, "Empty Timer");
+                if (countdown.isComplete()) {
+                    textPrint(mainWindow, rigaTimer+1, secondaColonna, "Complete",7 ,A_ITALIC);
+                } else {
+                    textPrint(mainWindow, rigaTimer+1, secondaColonna, "Empty Timer",0 ,A_ITALIC);
+                }
+                
             }
         }
 
-
         wrefresh(mainWindow); //refresh()
 
-
         handleInput();
+
         countdown.refreshTime();
+
         napms(50);
-        //usleep(50000);
     }
 }
 
@@ -132,4 +149,22 @@ void UI::handleInput() {
         case '3': clockFormat = getFormatUSA(); break;
 
     }
+}
+
+
+void UI::textPrint(WINDOW *window, int y, int x, const char *text, int color, chtype attributes) {
+    if (attributes != A_NORMAL) {
+        wattron(window, attributes);
+    }
+    if (color > 0) {
+        wattron(window, COLOR_PAIR(color));
+    }
+    mvwprintw(window, y, x, "%s", text);
+    if (attributes != A_NORMAL) {
+        wattroff(window, attributes);
+    }
+    if (color > 0) {
+        wattroff(window, COLOR_PAIR(color));
+    }
+
 }
