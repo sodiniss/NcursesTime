@@ -14,4 +14,25 @@ std::string getDateEU();
 std::string getDateISO();
 std::string getDateUSA();
 
+
+class DateTime {
+private:
+    const char* format;
+    std::string dateTime;
+
+public:
+    DateTime();
+    DateTime(int day, int month, int year, int h, int m, int s);
+
+    const char* getFormat();
+
+    void setFormatEU(); 
+    void setFormatISO(); 
+    void setFormatUSA(); 
+
+    void update();
+    std::string print();
+    std::string toString();
+};
+
 #endif

@@ -27,7 +27,7 @@ UI::UI() {
     //creazione della finestra
     int mainWindowHeight = 8;
     int mainWindowWidth = 50;
-    int mainWindowStartY= (getmaxy(stdscr) - mainWindowHeight)/2;
+    int mainWindowStartY= (getmaxy(stdscr) - mainWindowHeight)/4;
     int mainWindowStartX= (getmaxx(stdscr) - mainWindowWidth)/2;
 
     mainWindow = newwin(mainWindowHeight, mainWindowWidth, mainWindowStartY, mainWindowStartX);
