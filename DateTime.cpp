@@ -52,14 +52,9 @@ const char* DateTime::getFormat() {
 }
 
 DateTime::DateTime() {
-    format = getFormatEU(); //default
+    setFormatEU(); //default
+    now();
 
-    time_t timestamp = time(nullptr);
-    struct tm dtstruct = *localtime(&timestamp);
-    char buffer[30];
-    strftime(buffer, sizeof(buffer), format, &dtstruct);
-
-    dateTime = std::string(buffer);
 }
 
 DateTime::DateTime(int day, int month, int year, int h, int m, int s) {
@@ -85,15 +80,21 @@ DateTime::DateTime(int day, int month, int year, int h, int m, int s) {
 }
 
 
-void DateTime::update() {
+void DateTime::now() {
+    time_t timestamp = time(nullptr);
+    struct tm dtstruct = *localtime(&timestamp);
+    char buffer[30];
+    strftime(buffer, sizeof(buffer), format, &dtstruct);
 
+    dateTime = std::string(buffer);
 }
 
-std::string DateTime::print() {
+std::string DateTime::printCurrent() {
+    now();
     return dateTime;
 }
 
 std::string DateTime::toString() {
-
+    return dateTime;
 }
 

@@ -30,8 +30,8 @@ public:
     void setFormatISO(); 
     void setFormatUSA(); 
 
-    void update();
-    std::string print();
+    void now();
+    std::string printCurrent();
     std::string toString();
 };
 
