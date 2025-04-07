@@ -1,11 +1,14 @@
 #include "Countdown.h"
 #include <string>
+
 #include <unistd.h>
+
 
 Countdown::Countdown() {
     seconds = 0;
     running = false;
     complete = false;
+    lastUpdate = std::chrono::steady_clock::now();
 }
 
 void Countdown::addTime(int sec) {
@@ -24,6 +27,7 @@ void Countdown::start() {
     if (seconds > 0) {
         complete = false;
         running = true;
+        lastUpdate = std::chrono::steady_clock::now();
     }
 }
 
@@ -53,12 +57,18 @@ int Countdown::getSeconds() {
 
 void Countdown::refreshTime() {
     if (running && seconds > 0) {
-        sleep(1);
-        seconds--;
-        if (seconds == 0) {
-            running = false;
-            complete = true;
-            // cout che timer completato
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastUpdate).count();
+    
+        if (elapsed >= 1) {
+
+            lastUpdate = now;  //nuovo tempo di riferimento
+            //sleep(1);
+            seconds--;
+            if (seconds == 0) {
+                running = false;
+                complete = true;
+            }
         }
     }
 }

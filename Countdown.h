@@ -1,5 +1,6 @@
 #ifndef COUNTDOWN_H
 #define COUNTDOWN_H
+#include <chrono>
 
 #include <string>
 class Countdown {
@@ -7,6 +8,7 @@ private:
     int seconds;
     bool running;
     bool complete;
+    std::chrono::steady_clock::time_point lastUpdate;
 
 public:
     Countdown();

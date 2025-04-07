@@ -14,7 +14,6 @@ UI::UI() {
     start_color();
     init_color(COLOR_BLACK, 100, 0, 0);
 
-
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     init_pair(2, COLOR_BLUE, COLOR_BLACK);
     init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
@@ -25,9 +24,9 @@ UI::UI() {
     init_pair(8, COLOR_CYAN, COLOR_BLACK);
 
     //creazione della finestra
-    int mainWindowHeight = 8;
+    int mainWindowHeight = 10;
     int mainWindowWidth = 50;
-    int mainWindowStartY= (getmaxy(stdscr) - mainWindowHeight)/2;
+    int mainWindowStartY= (getmaxy(stdscr) - mainWindowHeight)/4;
     int mainWindowStartX= (getmaxx(stdscr) - mainWindowWidth)/2;
 
     mainWindow = newwin(mainWindowHeight, mainWindowWidth, mainWindowStartY, mainWindowStartX);
@@ -39,9 +38,7 @@ UI::UI() {
     wrefresh(mainWindow);
 
     //formato data predefinito
-    clockFormat = getFormatEU();
-
-
+    datetime.setFormatEU();
 }
 
 UI::~UI() {
@@ -68,7 +65,7 @@ void UI::run() {
         }
 
 
-        int rigaData = 1;
+        int rigaData = 2;
         int rigaTimer = 5;
         int primaColonna = 2;
         int secondaColonna = primaColonna + 15;
@@ -76,19 +73,19 @@ void UI::run() {
         //sezione Data e Ora
         textPrint(mainWindow, rigaData, primaColonna, "Data & Ora", 2, A_BOLD);
         textPrint(mainWindow, rigaData+1, primaColonna, "Formato", 2, A_ITALIC);
-        textPrint(mainWindow, rigaData, secondaColonna, formatDate(clockFormat).c_str());
+        textPrint(mainWindow, rigaData, secondaColonna, datetime.printCurrent().c_str());
 
         textPrint(mainWindow, rigaData+1, secondaColonna, "(1)EU" );
         textPrint(mainWindow, rigaData+1, secondaColonna+10, "(2)ISO" );
         textPrint(mainWindow, rigaData+1, secondaColonna+20, "(3)USA" );
 
-        if (clockFormat == getFormatEU()) {
+        if (datetime.getFormat() == getFormatEU()) {
             textPrint(mainWindow, rigaData+1, secondaColonna, "(1)EU", 2, A_BOLD );
         }
-        if (clockFormat == getFormatISO()) {
+        if (datetime.getFormat() == getFormatISO()) {
             textPrint(mainWindow, rigaData+1, secondaColonna+10, "(2)ISO", 2, A_BOLD );
         }
-        if (clockFormat == getFormatUSA()) {
+        if (datetime.getFormat() == getFormatUSA()) {
             textPrint(mainWindow, rigaData+1, secondaColonna+20, "(3)USA", 2, A_BOLD );
         }
 
@@ -144,9 +141,9 @@ void UI::handleInput() {
         case 'r': countdown.reset(); break;
         case 'q': delwin(mainWindow); endwin(); break;
 
-        case '1': clockFormat = getFormatEU(); break;
-        case '2': clockFormat = getFormatISO(); break;
-        case '3': clockFormat = getFormatUSA(); break;
+        case '1': datetime.setFormatEU(); break;
+        case '2': datetime.setFormatISO(); break;
+        case '3': datetime.setFormatUSA(); break;
 
     }
 }
