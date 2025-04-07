@@ -3,14 +3,6 @@
 #include <stdexcept>
 #include <string>
 
-std::string formatDate(const char* format) {
-    time_t timestamp = time(nullptr);
-    struct tm datetime = *localtime(&timestamp);
-    char buffer[30];
-    strftime(buffer, sizeof(buffer), format, &datetime); //da cambiare se vuoi usare WINDOW??
-    return std::string(buffer);
-}
-
 const char* getFormatEU() {
     return "%d/%m/%Y, %H:%M:%S";
 }
@@ -32,19 +24,6 @@ void DateTime::setFormatISO() {
 void DateTime::setFormatUSA() {
     format = getFormatUSA();
     //format = "%m/%d/%Y, %I:%M:%S %p";
-}
-
-
-std::string getDateEU() {
-    return formatDate(getFormatEU());
-}
-
-std::string getDateISO() {
-    return formatDate(getFormatISO());
-}
-
-std::string getDateUSA() {
-    return formatDate(getFormatUSA());
 }
 
 const char* DateTime::getFormat() {
@@ -85,7 +64,6 @@ void DateTime::now() {
     struct tm dtstruct = *localtime(&timestamp);
     char buffer[30];
     strftime(buffer, sizeof(buffer), format, &dtstruct);
-
     dateTime = std::string(buffer);
 }
 

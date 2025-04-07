@@ -3,16 +3,10 @@
 
 #include <string>
 
-std::string formatDate(const char* format);
 
 const char* getFormatEU();
 const char* getFormatISO();
 const char* getFormatUSA();
-
-//questi ora non li uso ma li lascio
-std::string getDateEU();
-std::string getDateISO();
-std::string getDateUSA();
 
 
 class DateTime {
@@ -22,7 +16,7 @@ private:
 
 public:
     DateTime();
-    DateTime(int day, int month, int year, int h, int m, int s);
+    DateTime(int day, int month, int year, int h, int m, int s); //solo per test
 
     const char* getFormat();
 
@@ -30,9 +24,9 @@ public:
     void setFormatISO(); 
     void setFormatUSA(); 
 
-    void now();
-    std::string printCurrent();
-    std::string toString();
+    void now(); //aggiorna dateTime all'ora attuale
+    std::string printCurrent(); //stampa facendo prima un now()
+    std::string toString(); //stampa (solo test)
 };
 
 #endif

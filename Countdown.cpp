@@ -59,7 +59,7 @@ void Countdown::refreshTime() {
     if (running && seconds > 0) {
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastUpdate).count();
-
+    
         if (elapsed >= 1) {
 
             lastUpdate = now;  //nuovo tempo di riferimento

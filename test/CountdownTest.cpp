@@ -1,5 +1,6 @@
 
 #include "gtest/gtest.h"
+#include <thread>
 #include <unistd.h>
 #include "../Countdown.h"
 
@@ -29,10 +30,8 @@ TEST(CountdownTest, AddTime) {
 TEST(CountdownTest, StartPause) {
     Countdown c;
     c.addTime(10);
-    
     c.start();
     EXPECT_TRUE(c.isRunning());
-
     c.pause();
     EXPECT_FALSE(c.isRunning());
 }
@@ -53,9 +52,15 @@ TEST(CountdownTest, UpdateTest) {
     Countdown c;
     c.addTime(10);
     c.start();
-    c.refreshTime();
-    c.refreshTime();
-    c.refreshTime();
+
+    auto lastUpdate = std::chrono::steady_clock::now();
+    long elapsed = 0;
+    while (elapsed <= 3) {
+        c.refreshTime();
+        auto now = std::chrono::steady_clock::now();
+        elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastUpdate).count();
+        usleep(50);
+    }
     EXPECT_EQ(c.getSeconds(), 7);
 }
 

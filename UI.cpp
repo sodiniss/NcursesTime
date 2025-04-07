@@ -14,7 +14,6 @@ UI::UI() {
     start_color();
     init_color(COLOR_BLACK, 100, 0, 0);
 
-
     init_pair(1, COLOR_WHITE, COLOR_BLACK);
     init_pair(2, COLOR_BLUE, COLOR_BLACK);
     init_pair(3, COLOR_MAGENTA, COLOR_BLACK);
@@ -25,7 +24,7 @@ UI::UI() {
     init_pair(8, COLOR_CYAN, COLOR_BLACK);
 
     //creazione della finestra
-    int mainWindowHeight = 8;
+    int mainWindowHeight = 10;
     int mainWindowWidth = 50;
     int mainWindowStartY= (getmaxy(stdscr) - mainWindowHeight)/4;
     int mainWindowStartX= (getmaxx(stdscr) - mainWindowWidth)/2;
@@ -40,8 +39,6 @@ UI::UI() {
 
     //formato data predefinito
     datetime.setFormatEU();
-
-
 }
 
 UI::~UI() {
@@ -68,7 +65,7 @@ void UI::run() {
         }
 
 
-        int rigaData = 1;
+        int rigaData = 2;
         int rigaTimer = 5;
         int primaColonna = 2;
         int secondaColonna = primaColonna + 15;
