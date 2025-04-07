@@ -1,6 +1,6 @@
 #ifndef DATETIME_H
 #define DATETIME_H
-
+#include <ctime>
 #include <string>
 
 
@@ -12,7 +12,7 @@ const char* getFormatUSA();
 class DateTime {
 private:
     const char* format;
-    std::string dateTime;
+    struct tm dtstruct;
 
 public:
     DateTime();
@@ -24,9 +24,9 @@ public:
     void setFormatISO(); 
     void setFormatUSA(); 
 
-    void now(); //aggiorna dateTime all'ora attuale
+    void now(); //aggiorna struct all'ora attuale
     std::string printCurrent(); //stampa facendo prima un now()
-    std::string toString(); //stampa (solo test)
+    std::string toString(); //stampa (solo usato nei test)
 };
 
 #endif

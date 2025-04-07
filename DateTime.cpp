@@ -1,5 +1,5 @@
 #include "DateTime.h"
-#include <ctime>
+
 #include <stdexcept>
 #include <string>
 
@@ -15,15 +15,12 @@ const char* getFormatUSA() {
 
 void DateTime::setFormatEU() {
     format = getFormatEU();
-    //format = "%d/%m/%Y, %H:%M:%S";
 }
 void DateTime::setFormatISO() {
     format = getFormatISO();
-    //format = "%Y/%m/%d, %H:%M:%S";
 }
 void DateTime::setFormatUSA() {
     format = getFormatUSA();
-    //format = "%m/%d/%Y, %I:%M:%S %p";
 }
 
 const char* DateTime::getFormat() {
@@ -33,46 +30,56 @@ const char* DateTime::getFormat() {
 DateTime::DateTime() {
     setFormatEU(); //default
     now();
-
 }
 
 DateTime::DateTime(int day, int month, int year, int h, int m, int s) {
-    format = getFormatEU(); //default
+    format = getFormatEU(); // default
 
-    struct tm dtstruct = {0}; // init
-    dtstruct.tm_year = year - 1900;
-    dtstruct.tm_mon = month - 1;    //gennaio= 0 
-    dtstruct.tm_mday = day;
-    dtstruct.tm_hour = h;
-    dtstruct.tm_min = m;
-    dtstruct.tm_sec = s;
-    
-    time_t timestamp = mktime(&dtstruct);  //corregge date non valide
-    if (timestamp == -1) //se data non valida da -1
+    tm original = {0};  //init
+    original.tm_year = year - 1900;
+    original.tm_mon  = month - 1;
+    original.tm_mday = day;
+    original.tm_hour = h;
+    original.tm_min  = m;
+    original.tm_sec  = s;
+
+    //copia per mktime per evitare che modifichi original
+    tm temp = original;
+
+    time_t timestamp = mktime(&temp);
+    if (timestamp == -1)
         throw std::invalid_argument("Data non valida");
 
-    dtstruct = *localtime(&timestamp);
-    char buffer[30];
-    strftime(buffer, sizeof(buffer), format, &dtstruct);
+    tm newstruct = *localtime(&timestamp);
 
-    dateTime = std::string(buffer);
+    bool unchanged =
+        original.tm_year == newstruct.tm_year &&
+        original.tm_mon  == newstruct.tm_mon  &&
+        original.tm_mday == newstruct.tm_mday &&
+        original.tm_hour == newstruct.tm_hour &&
+        original.tm_min  == newstruct.tm_min  &&
+        original.tm_sec  == newstruct.tm_sec;
+
+    if (!unchanged)
+        throw std::invalid_argument("Data non valida");
+
+    dtstruct = newstruct;
 }
 
 
 void DateTime::now() {
     time_t timestamp = time(nullptr);
-    struct tm dtstruct = *localtime(&timestamp);
-    char buffer[30];
-    strftime(buffer, sizeof(buffer), format, &dtstruct);
-    dateTime = std::string(buffer);
+    dtstruct = *localtime(&timestamp);
 }
 
 std::string DateTime::printCurrent() {
     now();
-    return dateTime;
+    return toString();
 }
 
 std::string DateTime::toString() {
-    return dateTime;
+    char buffer[30];
+    strftime(buffer, sizeof(buffer), format, &dtstruct);
+    return std::string(buffer);
 }
 

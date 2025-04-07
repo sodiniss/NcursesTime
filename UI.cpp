@@ -116,6 +116,13 @@ void UI::run() {
             }
         }
 
+        textPrint(mainWindow, rigaTimer+2, secondaColonna, "(7)+h");
+        textPrint(mainWindow, rigaTimer+3, secondaColonna, "(4)-h");
+        textPrint(mainWindow, rigaTimer+2, secondaColonna+10, "(8)+m");
+        textPrint(mainWindow, rigaTimer+3, secondaColonna+10, "(5)-m");
+        textPrint(mainWindow, rigaTimer+2, secondaColonna+20, "(9)+s");
+        textPrint(mainWindow, rigaTimer+3, secondaColonna+20, "(6)-s");
+
         wrefresh(mainWindow); //refresh()
 
         handleInput();
